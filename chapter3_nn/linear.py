@@ -4,6 +4,9 @@ Created on Mon Aug 13 14:20:26 2018
 
 @author: mmg
 """
+
+
+#
 import torch
 import numpy as np
 from torch.autograd import Variable
@@ -88,6 +91,8 @@ plt.plot(x_train.data.numpy(),y_train.data.numpy(),'bo',label = 'real')
 plt.plot(x_train.data.numpy(),y_.data.numpy(),'ro',label = 'estimated')
 plt.legend()
 plt.show()
+
+
     
 
 
