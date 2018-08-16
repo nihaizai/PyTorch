@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Aug 13 14:20:26 2018
-
+#一元线性回归模型
 @author: mmg
 """
 

@@ -2,6 +2,7 @@
 """
 Created on Wed Aug 15 14:09:19 2018
 
+#多项式回归模型
 @author: mmg
 """
 import torch as th
@@ -12,7 +13,7 @@ from torch.autograd import Variable
 w_target = np.array([0.5,3,2.4])
 b_target = np.array([0.9])
 
-#目标函数
+#目标函数 y = 0.9 + 0.5 * x + 3.0 * x^2 + 2.4 * x^3
 x_sample = np.arange(-3,3.1,0.1)
 y_sample = b_target[0] + w_target[0] * x_sample + w_target[1] * x_sample ** 2+\
            w_target[2] * x_sample ** 3
@@ -42,46 +43,52 @@ def multi_linear(x):
 def get_loss(y,y_):
     return th.mean((y-y_)**2)
 
-y_pred = multi_linear(x_train)
-
-plt.plot(x_train.data.numpy()[:,0],y_pred.data.numpy(),label = 'fitting curve',color='r')
-plt.plot(x_train.data.numpy()[:,0],y_sample,label = 'real curve',color='b')
-plt.legend()
-plt.show()
-
-
-loss = get_loss(y_pred,y_train)
-
-loss.backward()
-print(w.grad)
-print(b.grad.data)
+#y_pred = multi_linear(x_train)
+#
+#plt.plot(x_train.data.numpy()[:,0],y_pred.data.numpy(),label = 'fitting curve',color='r')
+#plt.plot(x_train.data.numpy()[:,0],y_sample,label = 'real curve',color='b')
+#plt.legend()
+#plt.show()
+#
+#
+#loss = get_loss(y_pred,y_train)
+#
+#loss.backward()
+#print(w.grad)
+#print(b.grad.data)
 
 ln = 0.001
-w.data = w.data - ln*w.grad.data
-b.data = b.data - ln*b.grad.data
-y_pred = multi_linear(x_train)
-
-plt.plot(x_train.data.numpy()[:,0],y_pred.data.numpy(),label = 'fitting curve',color='r')
-plt.plot(x_train.data.numpy()[:,0],y_sample,label = 'real curve',color='b')
-plt.legend()
-plt.show()
+#w.data = w.data - ln*w.grad.data
+#b.data = b.data - ln*b.grad.data
+#y_pred = multi_linear(x_train)
+#
+#plt.plot(x_train.data.numpy()[:,0],y_pred.data.numpy(),label = 'fitting curve',color='r')
+#plt.plot(x_train.data.numpy()[:,0],y_sample,label = 'real curve',color='b')
+#plt.legend()
+#plt.show()
 
 epochs = 100
 for e in range(epochs):
     y_pred = multi_linear(x_train)
     loss = get_loss(y_pred,y_train)
     
-    w.grad.data.zero_()
-    b.grad.data.zero_()
+
     loss.backward()
     
     w.data = w.data - ln * w.grad.data
     b.data = b.data - ln * b.grad.data
     
+    w.grad.data.zero_()     #当只写epochs这个循环时，w.grad.data.zero_()应放在更新后面，为什么？？、
+    b.grad.data.zero_()
+    
     if (e+1)%20 == 0:
         print('epochs:{},loss:{:.5f}'.format(e+1,loss.data))
 
+
+print('w.data:{}'.format(w.data))
+print('b.data:{}'.format(b.data))
 y_pred = multi_linear(x_train)
+
 
 plt.plot(x_train.data.numpy()[:,0],y_pred.data.numpy(),label = 'fitting curve',color='r')
 plt.plot(x_train.data.numpy()[:,0],y_sample,label = 'real curve',color='b')
