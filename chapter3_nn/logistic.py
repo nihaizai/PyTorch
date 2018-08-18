@@ -6,7 +6,7 @@ Created on Thu Aug 16 15:03:17 2018
 @author: mmg
 """
 import torch
-import torch.autograd import Variable
+from torch.autograd import Variable
 import numpy as np
 import matplotlib.pyplot as plt 
 
@@ -19,7 +19,7 @@ with open('./data.txt','r') as f:
 #标准化
 x0_max = max([i[0] for i in data])
 x1_max = max([i[1] for i in data])
-data = [(i[0]/x0_max,i[1]/x1_max) for i in data]
+data = [(i[0]/x0_max,i[1]/x1_max,i[2]) for i in data]
 
 x0 = list(filter(lambda x:x[-1] == 0.0,data))
 x1 = list(filter(lambda x:x[-1] == 1.0,data))
@@ -47,9 +47,11 @@ def sigmoid(x):
 plot_x = np.arange(-10,10.01,0.01)
 plot_y = sigmoid(plot_x)
 plt.plot(plot_x,plot_y,'r')
+plt.show()
 
 x_data = Variable(x_data)
 y_data = Variable(y_data)
+
 
 import torch.nn.functional as F
 # 定义logistic 回归模型
@@ -57,15 +59,16 @@ w = Variable(torch.randn(2,1),requires_grad = True)
 b = Variable(torch.zeros(1),requires_grad = True)
 
 def logistic_regression(x):
-    return F.sigmoid(torch.mm(w,x) + b) #PyTorch中已经封装好了sigmoid函数
+    return F.sigmoid(torch.mm(x,w) + b) #PyTorch中已经封装好了sigmoid函数
 
 w0 = w[0].data[0]
-w1 = w[1].data[1]
+w1 = w[1].data[0]
 b0 = b.data[0]
 print('b0: {}'.format(b0))
 
 plot_x = np.arange(0.2,1,0.01)
-plot_y = (-w0 * plot_x - b0) /w1  #?????
+plot_y = (- w0 * plot_x - b0) / w1  #?????
+
 
 plt.plot(plot_x,plot_y,'g',label='cutting line')
 plt.plot(plot_x0,plot_y0,'ro',label='x_0')
@@ -98,9 +101,6 @@ print loss
 
 
 
-#g = lambda x: x*x-4
-#for i in range(10):
-#    print g(i)
-#print filter(lambda x:x*x-4,range(10))
+
 
 
