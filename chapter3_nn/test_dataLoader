@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Nov 13 16:19:43 2018
+
+@author: Administrator
+"""
+
+import torch
+from torch.autograd import Variable
+import torch.nn as nn
+from torch.utils.data import TensorDataset, DataLoader
+
+
+N, D_in, H, D_out = 5, 2, 5, 2
+x = Variable(torch.randn(N, D_in))
+y = Variable(torch.randn(H, D_out))
+print('x: {} '.format(x))
+print('y: {}'.format(y))
+# When you need to load custom data, just write your own Dataset class
+loader = DataLoader(TensorDataset(x, y), batch_size=2)
+
+for epoch in range(2):
+    # Iterate(遍历) over loader to form minibatches
+    print('epoch: {} '.format(epoch))
+    for x_batch, y_batch in loader:
+        # Loader gives Tensors so you need to wrap in Variables
+        x_var, y_var = Variable(x_batch), Variable(y_batch)
+        print('x_var: {} '.format(x_var))
+        print('y_var: {} '.format(y_var))
+        print('test var')
+  
